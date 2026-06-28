@@ -367,6 +367,49 @@ tibble(
   )
 )
 
+
+cor_matrix <- cor(
+  data[, c("CTQ_total", "SE_mean", "SCS_mean", "SCC_mean")],
+  use = "complete.obs"
+)
+
+cor_df <- as.data.frame(as.table(round(cor_matrix, 2)))
+
+ggplot(cor_df, aes(x = Var1, y = Var2, fill = Freq)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = round(Freq, 2)), size = 5) +
+  scale_fill_gradient2(
+    low = "#B2182B",     # אדום
+    mid = "white",
+    high = "#2166AC",    # כחול
+    midpoint = 0,
+    limits = c(-1, 1),
+    name = "r"
+  ) +
+  theme_minimal(base_size = 16) +
+  labs(
+    title = "Correlation Heatmap",
+    x = "",
+    y = ""
+  ) +
+  theme(
+    axis.text.x = element_text(
+      size = 14,
+      angle = 45,
+      hjust = 1
+    ),
+    axis.text.y = element_text(
+      size = 14
+    ),
+    plot.title = element_text(
+      size = 18,
+      face = "bold"
+    ),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12)
+  )
+
+
 ```
 
 ## This section was used for exploratory analyses to identify potentially useful models.
@@ -509,46 +552,6 @@ cor_matrix <- cor(
 summary(data[,c("CTQ_total","SE_mean","SCS_mean","SCC_mean")])
 
 
-cor_matrix <- cor(
-  data[, c("CTQ_total", "SE_mean", "SCS_mean", "SCC_mean")],
-  use = "complete.obs"
-)
-
-cor_df <- as.data.frame(as.table(round(cor_matrix, 2)))
-
-ggplot(cor_df, aes(x = Var1, y = Var2, fill = Freq)) +
-  geom_tile(color = "white") +
-  geom_text(aes(label = round(Freq, 2)), size = 5) +
-  scale_fill_gradient2(
-    low = "#B2182B",     # אדום
-    mid = "white",
-    high = "#2166AC",    # כחול
-    midpoint = 0,
-    limits = c(-1, 1),
-    name = "r"
-  ) +
-  theme_minimal(base_size = 16) +
-  labs(
-    title = "Correlation Heatmap",
-    x = "",
-    y = ""
-  ) +
-  theme(
-    axis.text.x = element_text(
-      size = 14,
-      angle = 45,
-      hjust = 1
-    ),
-    axis.text.y = element_text(
-      size = 14
-    ),
-    plot.title = element_text(
-      size = 18,
-      face = "bold"
-    ),
-    legend.title = element_text(size = 14),
-    legend.text = element_text(size = 12)
-  )
 
 
 model_SE <- lm(
