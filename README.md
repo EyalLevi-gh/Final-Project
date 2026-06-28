@@ -9,16 +9,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-## R Markdown
+## Main code used in the analyses
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-
-
-
-```{r cars}
+```{r}
 
 data <- read.csv("C:/Users/eyale/Downloads/Anat & Bella DATA 110226 Trimmed N=588.csv")
 
@@ -334,70 +327,7 @@ ggplot(plot_data, aes(x = CTQ_mean, y = Score)) +
     axis.title = element_text(face = "bold")
   )
 
-data$CTQ10_r <- 6 - data$CTQ10
-data$CTQ16_r <- 6 - data$CTQ16
-data$CTQ22_r <- 6 - data$CTQ22
 
-model_all_items <- lm(
-  SCC_mean ~
-    CTQ1 + CTQ2_r + CTQ3 + CTQ4 + CTQ5_r +
-    CTQ6 + CTQ7_r + CTQ8 + CTQ9 + CTQ10_r + CTQ16_r + CTQ22_r +
-    CTQ11 + CTQ12 + CTQ13_r + CTQ14 + CTQ15 +
-    CTQ17 + CTQ18 + CTQ19_r + CTQ20 + CTQ21 +
-    CTQ23 + CTQ24 + CTQ25 + CTQ26_r + CTQ27 + CTQ28_r +
-    RAS1 + RAS2 + RAS3 + RAS4_r + RAS5 + RAS6 + RAS7_r +
-    CTS1 + CTS2 + CTS3 + CTS4 +
-    CTS5 + CTS6 + CTS7 + CTS8 +
-    CTS9 + CTS10 + CTS11 + CTS12 +
-    CTS13 + CTS14 + CTS15 + CTS16 +
-    GENDER,
-  data = data
-)
-
-summary(model_all_items)
-
-model_reduced <- lm(
-  SCC_mean ~
-    CTQ11 +
-    CTQ12 +
-    CTQ17 +
-    RAS2 +
-    RAS4_r +
-    RAS7_r +
-    CTS6 +
-    GENDER,
-  data = data
-)
-
-summary(model_reduced)
-
-model_reduced_contrib <- calc_contribution(model_reduced) %>%
-  mutate(Model = "Reduced model")
-
-contribution_table <- model_reduced_contrib %>%
-  mutate(Contribution = round(Contribution, 3))
-
-ggplot(
-  contribution_table,
-  aes(
-    x = Model,
-    y = Contribution,
-    fill = Predictor
-  )
-) +
-  geom_col(position = "dodge") +
-  theme_minimal() +
-  labs(
-    title = "Unique contribution of predictors",
-    x = "",
-    y = expression(Delta*R^2)
-  ) +
-  scale_fill_brewer(palette = "Set2")
-
-data$CTQ_selected_mean <- rowMeans(
-  data[, c("CTQ11", "CTQ12", "CTQ17")],
-  na.rm = TRUE
-)
 
 cv_r2 <- function(model, data, k = 5){
 
@@ -445,8 +375,7 @@ tibble(
 ```{r pressure, echo=FALSE}
 
 
-# copy in case I break the code above and this part is also test area where I tested diffrent kinds of 
-# models To use in the final time
+
 
 data <- read.csv("C:/Users/eyale/Downloads/Anat & Bella DATA 110226 Trimmed N=588.csv")
 
@@ -691,7 +620,70 @@ summary(data$CTS_total)
 
 
 # trying more models
+data$CTQ10_r <- 6 - data$CTQ10
+data$CTQ16_r <- 6 - data$CTQ16
+data$CTQ22_r <- 6 - data$CTQ22
 
+model_all_items <- lm(
+  SCC_mean ~
+    CTQ1 + CTQ2_r + CTQ3 + CTQ4 + CTQ5_r +
+    CTQ6 + CTQ7_r + CTQ8 + CTQ9 + CTQ10_r + CTQ16_r + CTQ22_r +
+    CTQ11 + CTQ12 + CTQ13_r + CTQ14 + CTQ15 +
+    CTQ17 + CTQ18 + CTQ19_r + CTQ20 + CTQ21 +
+    CTQ23 + CTQ24 + CTQ25 + CTQ26_r + CTQ27 + CTQ28_r +
+    RAS1 + RAS2 + RAS3 + RAS4_r + RAS5 + RAS6 + RAS7_r +
+    CTS1 + CTS2 + CTS3 + CTS4 +
+    CTS5 + CTS6 + CTS7 + CTS8 +
+    CTS9 + CTS10 + CTS11 + CTS12 +
+    CTS13 + CTS14 + CTS15 + CTS16 +
+    GENDER,
+  data = data
+)
+
+summary(model_all_items)
+
+model_reduced <- lm(
+  SCC_mean ~
+    CTQ11 +
+    CTQ12 +
+    CTQ17 +
+    RAS2 +
+    RAS4_r +
+    RAS7_r +
+    CTS6 +
+    GENDER,
+  data = data
+)
+
+summary(model_reduced)
+
+model_reduced_contrib <- calc_contribution(model_reduced) %>%
+  mutate(Model = "Reduced model")
+
+contribution_table <- model_reduced_contrib %>%
+  mutate(Contribution = round(Contribution, 3))
+
+ggplot(
+  contribution_table,
+  aes(
+    x = Model,
+    y = Contribution,
+    fill = Predictor
+  )
+) +
+  geom_col(position = "dodge") +
+  theme_minimal() +
+  labs(
+    title = "Unique contribution of predictors",
+    x = "",
+    y = expression(Delta*R^2)
+  ) +
+  scale_fill_brewer(palette = "Set2")
+
+data$CTQ_selected_mean <- rowMeans(
+  data[, c("CTQ11", "CTQ12", "CTQ17")],
+  na.rm = TRUE
+)****
 
 model_SE_final <- lm(
   SE_mean ~ CTQ_total + RAS_total + CTS_violence + GENDER,
