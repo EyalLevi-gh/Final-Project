@@ -15,6 +15,7 @@ library(tidyverse)
 
 path <- "C:/Users/eyale/Downloads/Anat & Bella DATA 110226 Trimmed N=588.csv"
 data <- read.csv(path)
+# Set seed for reproducible cross-validation folds
 set.seed(123)
 
 
@@ -414,15 +415,6 @@ ggplot(cor_df, aes(x = Var1, y = Var2, fill = Freq)) +
 
 
 # Diagnostic plots for checking linear regression assumptions
-par(mfrow = c(2,2))
-plot(model_SE_final)
-
-par(mfrow = c(2,2))
-plot(model_SCS_final)
-
-par(mfrow = c(2,2))
-plot(model_SCC_final)
-
 par(mfrow = c(3,4), 
     mar = c(4,4,2,1))
 
