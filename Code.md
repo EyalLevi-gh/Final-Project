@@ -708,7 +708,7 @@ ggplot(
 data$CTQ_selected_mean <- rowMeans(
   data[, c("CTQ11", "CTQ12", "CTQ17")],
   na.rm = TRUE
-)****
+)
 
 model_SE_final <- lm(
   SE_mean ~ CTQ_total + RAS_total + CTS_violence + GENDER,
