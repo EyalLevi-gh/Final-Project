@@ -409,6 +409,24 @@ ggplot(cor_df, aes(x = Var1, y = Var2, fill = Freq)) +
     legend.text = element_text(size = 12)
   )
 
+# Diagnostic plots for checking linear regression assumptions
+par(mfrow = c(2,2))
+plot(model_SE_final)
+
+par(mfrow = c(2,2))
+plot(model_SCS_final)
+
+par(mfrow = c(2,2))
+plot(model_SCC_final)
+
+par(mfrow = c(3,4), 
+    mar = c(4,4,2,1))
+
+plot(model_SE_final)
+plot(model_SCS_final)
+plot(model_SCC_final)
+
+par(mfrow = c(1,1))
 
 ```
 
