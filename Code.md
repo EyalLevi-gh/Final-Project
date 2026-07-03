@@ -13,7 +13,10 @@ library(tidyverse)
 
 ```{r}
 
-data <- read.csv("C:/Users/eyale/Downloads/Anat & Bella DATA 110226 Trimmed N=588.csv")
+path <- "C:/Users/eyale/Downloads/Anat & Bella DATA 110226 Trimmed N=588.csv"
+data <- read.csv(path)
+set.seed(123)
+
 
 # Emotional Neglect reverse items
 data$CTQ5_r  <- 6 - data$CTQ5
@@ -409,6 +412,7 @@ ggplot(cor_df, aes(x = Var1, y = Var2, fill = Freq)) +
     legend.text = element_text(size = 12)
   )
 
+
 # Diagnostic plots for checking linear regression assumptions
 par(mfrow = c(2,2))
 plot(model_SE_final)
@@ -438,7 +442,7 @@ par(mfrow = c(1,1))
 
 
 
-data <- read.csv("C:/Users/eyale/Downloads/Anat & Bella DATA 110226 Trimmed N=588.csv")
+data <- read.csv(path)
 
 # Emotional Neglect reverse items
 data$CTQ5_r  <- 6 - data$CTQ5
@@ -704,7 +708,7 @@ ggplot(
 data$CTQ_selected_mean <- rowMeans(
   data[, c("CTQ11", "CTQ12", "CTQ17")],
   na.rm = TRUE
-)
+)****
 
 model_SE_final <- lm(
   SE_mean ~ CTQ_total + RAS_total + CTS_violence + GENDER,
@@ -860,7 +864,7 @@ table(data2_clean$AGE_num, useNA = "ifany")
 
 
 
-data3 <- read.csv("C:/Users/eyale/Downloads/Anat & Bella DATA 110226 Trimmed N=588.csv")
+data3 <- read.csv(path)
 data3 <- data3[, 1:106]
 
 data3 <- data3[, !grepl("^SE", names(data3))]
@@ -941,7 +945,6 @@ summary(model_fe_step)
 
 
 
-set.seed(123)
 
 df <- data3_clean
 target <- "SE_mean"
@@ -1356,8 +1359,6 @@ model_scc_step <- scc_models$model_step
 
 summary(model_scc_all_no_step)
 summary(model_scc_step)
-
-
 ```
 
 
