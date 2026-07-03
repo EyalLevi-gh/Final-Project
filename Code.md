@@ -13,7 +13,7 @@ library(tidyverse)
 
 ```{r}
 
-path <- "C:/Users/eyale/Downloads/Anat & Bella DATA 110226 Trimmed N=588.csv"
+path <- "data.csv"
 data <- read.csv(path)
 # Set seed for reproducible cross-validation folds
 set.seed(123)
