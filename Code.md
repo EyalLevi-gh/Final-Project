@@ -415,7 +415,7 @@ ggplot(cor_df, aes(x = Var1, y = Var2, fill = Freq)) +
 ## This section was used for exploratory analyses to identify potentially useful models.
 ## The final models reported in the paper are the theory-driven models described above.
 
-```{r pressure, echo=FALSE}
+```{r, echo=FALSE}
 
 
 
@@ -686,7 +686,7 @@ ggplot(
 data$CTQ_selected_mean <- rowMeans(
   data[, c("CTQ11", "CTQ12", "CTQ17")],
   na.rm = TRUE
-)****
+)
 
 model_SE_final <- lm(
   SE_mean ~ CTQ_total + RAS_total + CTS_violence + GENDER,
