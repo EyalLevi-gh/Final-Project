@@ -12,12 +12,18 @@ library(tidyverse)
 ## Main code used in the analyses
 
 ```{r}
+#############################################################
+# 1. Load Packages and Data
+#############################################################
 
 path <- "data.csv"
 data <- read.csv(path)
 # Set seed for reproducible cross-validation folds
 set.seed(123)
 
+#############################################################
+# 2. Score CTQ Questionnaire
+#############################################################
 
 # Emotional Neglect reverse items
 data$CTQ5_r  <- 6 - data$CTQ5
@@ -66,6 +72,12 @@ data$CTQ_total <-
   data$Sexual_Abuse +
   data$Emotional_Neglect +
   data$Physical_Neglect
+
+
+#############################################################
+# 3. Score Self-Esteem Scale
+#############################################################
+
 # SE reverse items
 data$SE3_r  <- 5 - data$SE3
 data$SE5_r  <- 5 - data$SE5
@@ -79,6 +91,10 @@ data$SE_mean <- rowMeans(
            "SE6","SE7","SE8_r","SE9_r","SE10_r")],
   na.rm = TRUE
 )
+
+#############################################################
+# 4. Score Self-Compassion Scale
+#############################################################
 
 # SCS reverse items
 data$SCS1_r  <- 6 - data$SCS1
@@ -105,6 +121,10 @@ data$SCS_mean <- rowMeans(
   )],
   na.rm = TRUE
 )
+
+#############################################################
+# 5. Score Self-Concept Clarity
+#############################################################
 
 # SCC reverse items
 data$SCC1_r  <- 6 - data$SCC1
@@ -137,6 +157,11 @@ data$SCC_mean <- rowMeans(
   na.rm = TRUE
 )
 
+
+#############################################################
+# 6. Descriptive Statistics
+#############################################################
+
 cor_matrix <- cor(
   data[, c("CTQ_total",
            "SE_mean",
@@ -147,6 +172,9 @@ cor_matrix <- cor(
 
 summary(data[,c("CTQ_total","SE_mean","SCS_mean","SCC_mean")])
 
+#############################################################
+# 7. Correlation Analyses
+#############################################################
 
 cor_matrix <- cor(
   data[, c(
@@ -164,6 +192,9 @@ cor_matrix <- cor(
 
 round(cor_matrix, 2)
 
+#############################################################
+# 8. Regression Models
+#############################################################
 
 model_SE <- lm(
   SE_mean ~ CTQ_total + AGE + GENDER + EDUCATION + INCOME + HEALTH,
@@ -269,6 +300,9 @@ scc_contrib <- calc_contribution(model_SCC_final) %>%
 contribution_table <- bind_rows(se_contrib, scs_contrib, scc_contrib) %>%
   mutate(Contribution = round(Contribution, 3))
 
+#############################################################
+# 10. Visualizations
+#############################################################
 
 ggplot(
   contribution_table,
@@ -297,7 +331,6 @@ data$CTQ_mean <- rowMeans(
   )],
   na.rm = TRUE
 )
-
 
 plot_data <- data %>%
   select(CTQ_mean, SE_mean, SCS_mean, SCC_mean) %>%
@@ -332,6 +365,8 @@ ggplot(plot_data, aes(x = CTQ_mean, y = Score)) +
   )
 
 
+# Evaluate model generalizability using 5-fold cross-validation.
+# Cross-validated R² provides an estimate of predictive performance on unseen data.
 
 cv_r2 <- function(model, data, k = 5){
 
@@ -371,6 +406,8 @@ tibble(
   )
 )
 
+# Visualize the correlations among the primary study variables.
+# Blue indicates positive correlations, red indicates negative correlations.
 
 cor_matrix <- cor(
   data[, c("CTQ_total", "SE_mean", "SCS_mean", "SCC_mean")],
@@ -392,7 +429,7 @@ ggplot(cor_df, aes(x = Var1, y = Var2, fill = Freq)) +
   ) +
   theme_minimal(base_size = 16) +
   labs(
-    title = "Correlation Heatmap",
+    title = "Correlations Among Childhood Trauma and Psychological Outcomes",
     x = "",
     y = ""
   ) +
@@ -426,8 +463,14 @@ par(mfrow = c(1,1))
 
 ```
 
-## This section was used for exploratory analyses to identify potentially useful models.
-## The final models reported in the paper are the theory-driven models described above.
+#############################################################
+# Exploratory Analyses 
+#
+# The analyses below were performed to explore alternative
+# model specifications, feature selection methods, and
+# predictive performance. This analiyss is methion in the final
+# report but we didn`t those those model beacuse they not answering the rseach question
+#############################################################
 
 ```{r, echo=FALSE}
 
@@ -1353,5 +1396,12 @@ summary(model_scc_all_no_step)
 summary(model_scc_step)
 ```
 
-
+#############################################################
+# End of Analysis
+#
+# The final models reported in the manuscript are based on
+# theory-driven regression analyses with demographic and
+# relationship controls. Exploratory analyses are retained
+# for transparency and future reference.
+#############################################################
 
