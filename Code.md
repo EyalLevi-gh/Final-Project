@@ -269,7 +269,9 @@ summary(model_SE_final)
 summary(model_SCS_final)
 summary(model_SCC_final)
 
-
+#############################################################
+# 9. Predictor Contribution Analysis
+#############################################################
 
 calc_contribution <- function(full_model) {
   full_r2 <- summary(full_model)$r.squared
@@ -464,17 +466,23 @@ par(mfrow = c(1,1))
 ```
 
 #############################################################
-# Exploratory Analyses 
+# Exploratory Analyses
 #
-# The analyses below were performed to explore alternative
+# The analyses below were conducted to explore alternative
 # model specifications, feature selection methods, and
-# predictive performance. This analiyss is methion in the final
-# report but we didn`t those those model beacuse they not answering the rseach question
+# predictive performance. These exploratory models are
+# described briefly in the final report but were not used
+# for the main conclusions because they were not directly
+# aligned with the research questions.
 #############################################################
 
 ```{r, echo=FALSE}
 
-
+#############################################################
+# Reload and preprocess the dataset for exploratory analyses.
+# The preprocessing steps are repeated here to keep this
+# section self-contained and independent from the main analyses.
+#############################################################
 
 
 data <- read.csv(path)
@@ -702,6 +710,12 @@ model_all_items <- lm(
 
 summary(model_all_items)
 
+# Construct a simplified model using only the predictors
+# that appeared most informative in the exploratory analysis.
+# This model is intended for comparison only and was not
+# selected as the final model.
+
+
 model_reduced <- lm(
   SCC_mean ~
     CTQ11 +
@@ -716,6 +730,11 @@ model_reduced <- lm(
 )
 
 summary(model_reduced)
+
+#############################################################
+# Estimate the unique contribution (ΔR²) of each predictor
+# in the reduced exploratory model.
+#############################################################
 
 model_reduced_contrib <- calc_contribution(model_reduced) %>%
   mutate(Model = "Reduced model")
@@ -808,6 +827,14 @@ ggplot(
   )
 
 
+
+#############################################################
+# Stepwise Variable Selection
+#
+# Compare a full regression model with a stepwise-selected
+# model to identify a smaller subset of predictors.
+#############################################################
+
 data2 <- data[, 1:106]
 
 data2 <- data2[, !grepl("^SE", names(data2))]
@@ -881,10 +908,10 @@ class(data$AGE)
 head(data$AGE, 20)
 unique(data$AGE)
 
+# Convert age categories into approximate numeric values
+# to allow exploratory analyses using continuous age.
+
 data2_clean$AGE_num <- NA
-
-
-
 
 data2_clean$AGE_num[data2_clean$AGE == "18-30"] <- 24
 data2_clean$AGE_num[data2_clean$AGE == "31-40"] <- 35.5
@@ -917,6 +944,13 @@ data3[] <- lapply(data3, function(x) {
   }
 })
 
+
+#############################################################
+# Feature Engineering
+#
+# Explore whether nonlinear terms and interaction effects
+# improve predictive performance.
+#############################################################
 
 
 head(data3)
@@ -979,6 +1013,14 @@ summary(model_fe_step)
 
 
 
+#############################################################
+# Random Model Generation
+#
+# Generate multiple candidate regression models with random
+# combinations of predictors, nonlinear transformations,
+# and interaction terms. This analysis was exploratory and
+# used to search for potentially better-performing models.
+#############################################################
 
 
 df <- data3_clean
@@ -1139,7 +1181,13 @@ is.null(best_model_adj)
 is.null(best_model_r2)
 
 
-
+#############################################################
+# Automatic Variable Transformation
+#
+# Evaluate several mathematical transformations for each
+# numeric predictor and retain the transformation that
+# produces the highest adjusted R² in a simple regression.
+#############################################################
 
 auto_transform <- function(df, target){
 
@@ -1229,6 +1277,8 @@ best_transforms <- auto_transform(
 
 head(best_transforms, 20)
 
+# Build a new dataset containing the best transformation
+# for each predictor identified in the previous step.
 
 build_best_features <- function(df, target, transform_table){
 
@@ -1325,7 +1375,13 @@ model_se_all_no_step <- lm(
 summary(model_se_all_no_step)
 
 
-
+#############################################################
+# Automated Model Construction
+#
+# Apply the same modeling pipeline to each psychological
+# outcome (Self-Esteem, Self-Compassion, and
+# Self-Concept Clarity) for comparison.
+#############################################################
 
 build_models <- function(data, target){
 
